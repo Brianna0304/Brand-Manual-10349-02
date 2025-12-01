@@ -1,21 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>AR Test</title>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.2/aframe/build/aframe-ar.min.js"></script>
-    <style>
-      body { margin: 0; overflow: hidden; }
-    </style>
-  </head>
-  <body>
-    <a-scene embedded arjs>
-      <!-- Marker -->
-      <a-marker preset="hiro">
-        <a-image src="testbild.png" width="1" height="1" position="0 0.5 0"></a-image>
-      </a-marker>
+<head>
+  <title>AR.js Test</title>
+  <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.2/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #fff; }
+    #startButton { padding: 20px 40px; font-size: 1.2em; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <!-- Start-Button -->
+  <button id="startButton">Kamera starten</button>
 
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+  <!-- AR-Szene (versteckt, bis Button geklickt) -->
+  <a-scene embedded arjs style="display:none;">
+    <a-marker preset="hiro">
+      <a-image src="testbild.png" width="1" height="1" position="0 0.5 0"></a-image>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    const button = document.getElementById('startButton');
+    const scene = document.querySelector('a-scene');
+
+    button.addEventListener('click', async () => {
+      // Szene sichtbar machen
+      scene.style.display = 'block';
+      button.style.display = 'none';
+
+      // Kamera aktivieren
+      try {
+        await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Kamera erfolgreich gestartet!");
+      } catch (err) {
+        alert("Kamera konnte nicht gestartet werden. Bitte Kameraerlaubnis überprüfen!");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
 </html>
